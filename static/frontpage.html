@@ -8,14 +8,25 @@ include(header)
 
 <h1 class="center">Spigot Monitor</h1>
 <div class="box">
-	Player Online ({{len(players)}}):<br />
-% for num, player in enumerate(sorted(players)):
-%     if num == len(players) - 1:
-and <a href="/player/{{player}}">{{player}}.</a>.<br />
-%     else:
-<a href="/player/{{player}}">{{player}}</a>, \
-%     end  # (if)
-% end  # (for)
+% if len(players) == 0:
+	No players online :-(<br />
+% else:
+%   if len(players) == 1:
+	1 Player Online:<br />
+%   else:
+    {{len(players)}} Players Online:<br />
+%   end  # (if)
+%
+%     for num, player in enumerate(sorted(players)):
+%         if num == len(players) - 1 and len(players) > 1:
+and <a href="/player/{{player}}"><img src="https://minotar.net/avatar/{{player}}/14"> {{player}}</a>.<br />
+%         elif len(players) == 1:
+Just <a href="/player/{{player}}"><img src="https://minotar.net/avatar/{{player}}/14"> {{player}}</a>.<br />
+%         else:
+<a href="/player/{{player}}"><img src="https://minotar.net/avatar/{{player}}/14"> {{player}}</a>, \\
+%         end  # (if)
+%     end  # (for)
+% end  # (if)
 </div>
 
 <div id="scrollback-div">

@@ -42,8 +42,22 @@ def setup(app: Bottle):
         with sd.lock:
             sb_tuple = tuple(line for line in sd.scrollback)
             player_list = sd.game.players
-            return make_page(sd, 'frontpage.html', scrollback=sb_tuple, last_msg=sd.msg_num,
-                             players=player_list) 
+            return make_page('frontpage.html', scrollback=sb_tuple, last_msg=sd.msg_num,
+                             players=player_list)
+
+
+    @app.route('/player/<player>')
+    def player_page(sd: SpigotData, player):
+        """
+        Player information page
+        """
+        if player not in sd.game.players:
+            abort(404, 'Player not found.')
+
+        player_data = sd.game.players[player]
+
+        return make_page('player.html', player=player, player_data=player_data)
+
 
     @app.route('/update-sb')
     def updated_scrollback(sd: SpigotData):
@@ -74,7 +88,7 @@ def setup(app: Bottle):
     def serve_static(sd, filepath):
         return static_file(filepath, root='static/')
 
-    def make_page(sd: SpigotData, page_loc, **kwargs):
+    def make_page(page_loc, **kwargs):
         """
         Page generation tool.
         """

@@ -9,7 +9,7 @@ Module to assist parsing and using output gathered from Spigot.
 Also helps with data management.
 """
 
-from time import strftime, sleep
+from time import time, strftime, sleep
 from os import kill, getpid
 from signal import SIGTERM
 from enum import Enum
@@ -46,11 +46,12 @@ class GameData:
     Class to hold game data
     """
     def __init__(self):
-        self.players = []
+        self.players = {}
         self.status = SpigotState.RUNNING
 
 
 # METHODS #################################################
+
 
 def parse_event(sd: SpigotData, line):
     """
@@ -78,14 +79,17 @@ def parse_event(sd: SpigotData, line):
     elif sec_word == 'logged':
         player = words[2].split('[')[0]
         print('{} joined the game'.format(player))
-        sd.game.players.append(player)
+
+        # Data for player
+        sd.game.players[player] = {'joined': int(time()),
+                                   'deaths': 0}
     elif sec_word == 'left':
         # check that `<` isn't in name because angle brackets
         # indicate chat
 
         player = words[2]
         print('{} left the game'.format(player))
-        sd.game.players.remove(player)
+        del sd.game.players[player]
 
     # TODO: Temporary KeyError fix when less than 5 words
     if nwords < 5:
@@ -150,10 +154,10 @@ def command_handler(sd: SpigotData, command):
             return
         elif num == 1:
             sd.add_message(info_message('There is 1 player online:'))
-            sd.add_message(sd.game.players[0])
+            sd.add_message([key for key in sd.game.players][0])
         else:
             sd.add_message(info_message('There are {} players online:'.format(num)))
-            sd.add_message(', '.join(sd.game.players))
+            sd.add_message(', '.join([key for key in sorted(sd.game.players)]))
         sd.add_message('End of players list.')
         return
     else:
