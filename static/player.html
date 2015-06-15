@@ -1,0 +1,68 @@
+<%
+# (c) Copyright Cameron Conn 2015
+# Licensed AGPLv3 or Later
+# See `License` for details
+title = player
+include(header)
+from time import time
+from datetime import timedelta
+
+joined_delta = timedelta(seconds=(int(time()) - player_data['joined']))
+
+days = joined_delta.days
+hours = joined_delta.seconds//3600
+mins = (joined_delta.seconds//60) % 60
+secs = joined_delta.seconds % 60
+
+items = []
+
+if days > 1:
+    items.append('{} days'.format(days))
+elif days:
+    items.append('{} day'.format(days))
+end
+if hours > 1:
+    items.append('{} hours'.format(hours))
+elif hours: 
+    items.append('{} hour'.format(hours))
+end
+if mins > 1:
+    items.append('{} minutes'.format(mins))
+elif mins:
+    items.append('{} minute'.format(mins))
+end
+if secs > 1:
+    items.append('{} seconds'.format(secs))
+elif secs:
+    items.append('{} second'.format(secs))
+end
+
+conn_str = None
+
+if len(items) > 1:
+    conn_str = ', '.join(items[:-1])
+    conn_str = ', and '.join((conn_str, items[-1]))
+else:
+    conn_str = items[0]
+end
+%>
+
+<div id="playerinfo" class="center">
+	<div id="player-image">
+		<img src="https://minotar.net/body/{{player}}/150.png">
+	</div>
+
+	<p>A little about <b>{{player}}</b>:</p>
+	<table>
+		<tr>
+			<td>Connected for</td>
+			<td>{{conn_str}}</td>
+		</tr>
+		<tr>
+			<td>Deaths:</td>
+			<td>{{player_data['deaths']}}</td>
+		</tr>
+	</table>
+</div>
+
+% include(footer)
