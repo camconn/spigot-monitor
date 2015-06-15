@@ -1,0 +1,53 @@
+/*
+ * (c) Copyright Cameron Conn 2015
+ * Licensed AGPLv3, http://github.com/camconn/spigot-monitor/
+ * Licensed AGPLv3 or later
+ */
+body {
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+}
+#scrollback-div {
+	margin-left: auto;
+	margin-right: auto;
+}
+#scrollback {
+	background-color: #CFC5A9;
+	color: #000;
+	min-height: 30em;
+	max-height: 30em;
+	padding: 0.5em;
+	overflow-y: scroll;
+	border-radius: 5px;
+	// break lines
+	white-space: pre-wrap;	   /* CSS 3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;	  /* Opera 4-6 */
+	white-space: -o-pre-wrap;	/* Opera 7 */
+	word-wrap: break-word;	   /* Internet Explorer 5.5+ */
+}
+#commandbox {
+	display: flex;
+	flex: row;
+	margin: 0;
+	min-width: calc(100% - 0.4em);
+}
+#commands {
+	width: 100%;
+}
+#msg-num {
+	display: none;
+}
+.center {
+	align: center;
+}
+.box {
+	background-color: gray;
+	color: black;
+	border-radius: 3px;
+}
+.error {
+	color: red;
+	font-weight: bold;
+}

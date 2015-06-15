@@ -1,0 +1,41 @@
+<%
+# (c) Copyright Cameron Conn 2015
+# Licensed AGPLv3 or Later
+# See `LICENSE` for details
+title = 'Home'
+include(header)
+%>
+
+<h1 class="center">Spigot Monitor</h1>
+<div class="box">
+	Player Online ({{len(players)}}):<br />
+% for num, player in enumerate(sorted(players)):
+%     if num == len(players) - 1:
+and <a href="/player/{{player}}">{{player}}.</a>.<br />
+%     else:
+<a href="/player/{{player}}">{{player}}</a>, \
+%     end  # (if)
+% end  # (for)
+</div>
+
+<div id="scrollback-div">
+	<hr>
+	<p>Spigot Output:</p>
+	<div id="scrollback">
+		<code id="scrollback-text">
+% for line in scrollback:
+{{line}}<br />
+% end  # (for)
+		</code>
+	</div>
+	<div id="msg-num">{{last_msg}}</div>
+</div>
+<form id="commands" action="/" method="post">
+	<input id="commandbox" placeholder="Enter a command!" type="text" name="command" />
+</form>
+
+<script type="text/javascript" src="/static/frontpage.js"></script>
+
+<%
+include(footer)
+%>
