@@ -60,6 +60,10 @@ def parse_event(sd: SpigotData, line):
 
     l_words = tuple(word.lower() for word in words)
 
+    # ugly hack
+    if len(l_words) < 3:
+        return
+
     first_word = l_words[2]
     sec_word = l_words[3]
     nwords = len(words)
