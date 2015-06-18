@@ -17,6 +17,7 @@ import os
 from spigot import info_message, parse_event, SpigotState
 from wrapper import SpigotWrapperPlugin, SpigotData
 import webapp
+import logging
 
 
 def setup_process():
@@ -87,10 +88,12 @@ def data_handler(spigot_data: SpigotData, lock: threading.Lock):
                 buf = client.recv()
                 parse_event(spigot_data, buf)
                 spigot_data.add_message(buf)
+                logging.debug('<<OUTPUT>> {}'.format(buf))
 
             while not spigot_data.commands.empty():
                 command = spigot_data.commands.get()
                 client.send(command)
+                logging.debug('<<COMMAND>> {}'.format(command))
 
         # After java process is dead
         spigot_data.status = SpigotState.STOPPED
@@ -102,10 +105,12 @@ def data_handler(spigot_data: SpigotData, lock: threading.Lock):
             if command.lower() == 'start':
                 t = Process(target=r_w_worker, args=(child, spigot_data.close_event))
                 t.start()
+                logging.debug('Thread created.')
                 break
             elif command.lower() == 'quit':
                 message = info_message("KTHXBAI")
                 spigot_data.add_message(message)
+                logging.debug('Quitting program.')
                 break
 
         if not t.is_alive():
@@ -134,14 +139,18 @@ def main():
     """
     Main function that does stuff
     """
+    logging.basicConfig(filename='logs/monitor.log', level=logging.DEBUG)
+
     if not os.path.exists('spigot'):
         os.mkdir('spigot')
         print("""I made a `spigot` directory in this folder. """
               """Please place spigot.jar in it and run monitor.py again.""")
+        logging.debug('No spigot directory found. I made one instead.')
         exit(-1)
 
     if not os.path.exists('spigot/spigot.jar'):
         print("""spigot.jar not found! Exiting.""")
+        logging.debug('No spigot jarfile found.')
         exit(-2)
 
     spigot_data = SpigotData()
