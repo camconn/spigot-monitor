@@ -5,3 +5,4 @@ config.ini
 *.pyc
 *.swp
 __pycache__
+logs
