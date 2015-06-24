@@ -82,7 +82,8 @@ def parse_event(sd: SpigotData, line):
 
         # Data for player
         sd.game.players[player] = {'joined': int(time()),
-                                   'deaths': 0}
+                                   'deaths': 0,
+                                   'kills': 0}
     elif sec_word == 'left':
         # check that `<` isn't in name because angle brackets
         # indicate chat
@@ -96,13 +97,20 @@ def parse_event(sd: SpigotData, line):
         return
 
     if words[3] == 'fell':
-        print('{} died from heights'.format(words[2]))
+        player = words[2]
+        print('{} died from heights'.format(player))
+        sd.game.players[player]['deaths'] += 1
         return
     elif words[4] == 'blown':
         print('{} was blown up by {}'.format(words[2], words[7]))
+        sd.game.players[player]['deaths'] += 1
         return
     elif words[4] == 'slain':
-        print('{} was slain by {}'.format(words[2], words[6]))
+        killed = words[2]
+        killer = words[6]
+        print('{} was slain by {}'.format(killed, killer))
+        sd.game.players[killed]['deaths'] += 1
+        sd.game.players[killer]['kills'] += 1
         return
 
 
