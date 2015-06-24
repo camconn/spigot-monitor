@@ -111,7 +111,7 @@ def data_handler(spigot_data: SpigotData, lock: threading.Lock):
                 t.start()
                 logging.debug('Thread created.')
                 break
-            elif command.lower() == 'quit':
+            elif command.lower() == 'quit' or command.lower() == 'stop':
                 message = info_message("KTHXBAI")
                 spigot_data.add_message(message)
                 logging.debug('Quitting program.')
