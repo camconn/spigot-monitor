@@ -82,7 +82,9 @@ def data_handler(spigot_data: SpigotData, lock: threading.Lock):
 
     spigot_data.game.status = SpigotState.RUNNING
 
-    while True:
+    running = True
+
+    while running:
         while t.is_alive():
             if client.poll(0.3):
                 buf = client.recv()
@@ -100,6 +102,8 @@ def data_handler(spigot_data: SpigotData, lock: threading.Lock):
         spigot_data.add_message(info_message("""The server has stopped. Type 'start' to start. """
                                              """Type 'quit' to close Spigot Monitor"""))  # PEP8ers gonna hate
 
+        spigot_data.game.players = {}  # No players are available on a stopped server...
+
         while True:
             command = spigot_data.commands.get().strip()  # strip because commands have newline appended
             if command.lower() == 'start':
@@ -113,8 +117,8 @@ def data_handler(spigot_data: SpigotData, lock: threading.Lock):
                 logging.debug('Quitting program.')
                 break
 
-        if not t.is_alive():
-            break
+        if not t.is_alive():  # thread hasn't started again
+            running = False
 
     print('exiting data_handler loop')
 
