@@ -20,6 +20,10 @@ import webapp
 import logging
 
 
+#TODO: Load from config
+AUTO_RESTART = True
+
+
 def setup_process():
     # Use --nojline because jline breaks this script
     command_raw = 'java -jar spigot.jar nogui --nojline'
@@ -104,7 +108,7 @@ def data_handler(spigot_data: SpigotData, lock: threading.Lock):
 
         spigot_data.game.players = {}  # No players are available on a stopped server...
 
-        while True:
+        while True and not AUTO_RESTART:
             command = spigot_data.commands.get().strip()  # strip because commands have newline appended
             if command.lower() == 'start':
                 t = Process(target=r_w_worker, args=(child, spigot_data.close_event))
@@ -116,6 +120,11 @@ def data_handler(spigot_data: SpigotData, lock: threading.Lock):
                 spigot_data.add_message(message)
                 logging.debug('Quitting program.')
                 break
+
+        if AUTO_RESTART:
+            t = Process(target=r_w_worker, args=(child, spigot_data.close_event))
+            t.start()
+            logging.debug('Thread created.')
 
         if not t.is_alive():  # thread hasn't started again
             running = False
